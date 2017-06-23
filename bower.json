@@ -1,0 +1,19 @@
+{
+  "name": "purescript-stdgen",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^3.0.0",
+    "purescript-random": "^3.0.0",
+    "purescript-gen": "^1.1.0",
+    "purescript-int-53": "^3.0.0"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^3.0.0",
+    "purescript-jack": ""
+  }
+}
