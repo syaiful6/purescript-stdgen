@@ -1,7 +1,7 @@
 ### Purescript Std-Random
 
 This is port of Haskell's System Random, but with different API and has been recast in a form suitable for Purescript
-ecosystem. This lib depend and implements ```MonadGen``` defined on [published on Pursuit](https://github.com/purescript/purescript-gen).
+ecosystem. This lib depend and implements ```MonadGen``` defined on [purescript-gen](https://github.com/purescript/purescript-gen).
 
 ### Getting Started
 
