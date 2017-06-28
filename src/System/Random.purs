@@ -44,11 +44,14 @@ import Math ((%))
 
 type Size = Int
 
--- | Seed
+-- | Splittable random number generator.
 data StdSeed = StdSeed Int Int
 
 instance showStdSeed :: Show StdSeed where
   show (StdSeed a b) = "(StdSeed " <> show a <> " " <> show b <> ")"
+
+instance eqStdSeed :: Eq StdSeed where
+  eq (StdSeed s1 s2) (StdSeed t1 t2) = s1 == t1 && s2 == t2
 
 -- | Create a new 'StdSeed' from a 32-bit integer.
 mkStdSeed :: Int -> StdSeed
@@ -61,13 +64,15 @@ mkStdSeed s0 = StdSeed (s1 + 1) (s2 + 1)
   q  = s `div` 2147483562
   s2 = q `mod` 2147483398
 
--- create a new 'StdSeed' using `Random` effect
+-- | create a new 'StdSeed' using `Random` effect
 randomStdSeed :: forall eff. Eff (random :: RANDOM | eff) StdSeed
 randomStdSeed = mkStdSeed <$> randomInt bottom top
 
+-- | The smallest possible value returned from 'nextStdSeed'.
 nextMin :: Int
 nextMin = 1
 
+-- | The largest possible value returned from 'nextStdSeed'.
 nextMax :: Int
 nextMax = 2147483562
 
@@ -97,7 +102,9 @@ splitStdSeed seed@(StdSeed s1 s2) = case nextStdSeed seed of
 -- Random Generator ------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-data GenState = GenState StdSeed Int
+-- The Generator State parameterized with Seed and Size. The meaning of Size here
+-- depend on depends on the particular generator used.
+data GenState = GenState StdSeed Size
 
 instance showGenState :: Show GenState where
   show (GenState seed size) = "(GenState " <> show seed <> " " <> show size <> " )"
@@ -109,7 +116,7 @@ newtype StdGen a = StdGen (State GenState a)
 unStdGen :: forall a. StdGen a -> State GenState a
 unStdGen (StdGen a) = a
 
--- Run the random generator
+-- | Run the random generator
 runStdGen :: forall a. StdGen a -> GenState -> Tuple a GenState
 runStdGen = runState <<< unStdGen
 
@@ -185,6 +192,8 @@ randomSample' size gen = do
 randomSample :: forall r a. StdGen a -> Eff (random :: RANDOM | r) (Array a)
 randomSample = randomSample' 10
 
+-- | Create a random generator which samples a range of `Number`s i
+-- | with uniform probability.
 choose :: Number -> Number -> StdGen Number
 choose a b = (*) (max' - min') >>> (+) min' <$> uniform where
   min' = min a b
@@ -209,8 +218,7 @@ chooseInt' a b = floor <<< clamp <$> choose32BitPosNumber
 -- | Simple random generator that simply use `nextStdSeed` for it return value
 genStep :: StdGen Int
 genStep = StdGen $ state \(GenState seed size) ->
-  let Tuple i seed' = nextStdSeed seed
-  in Tuple i (GenState seed' size)
+  map (flip GenState size) (nextStdSeed seed)
 
 -- | A random generator which approximates a uniform random variable on `[0, 1]`
 uniform :: StdGen Number

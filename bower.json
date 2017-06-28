@@ -1,5 +1,13 @@
 {
   "name": "purescript-stdgen",
+  "license": "Apache-2.0",
+  "authors": [
+    "Syaiful Bahri <syaiful@pengunjungblog.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/syaiful6/purescript-stdgen.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
@@ -10,6 +18,10 @@
     "purescript-prelude": "^3.0.0",
     "purescript-random": "^3.0.0",
     "purescript-gen": "^1.1.0",
+    "purescript-integers": "^3.0.0",
+    "purescript-lazy": "^3.0.0",
+    "purescript-lists": "^4.0.0",
+    "purescript-math": "^2.0.0",
     "purescript-transformers": "^3.0.0"
   },
   "devDependencies": {

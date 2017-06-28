@@ -29,6 +29,8 @@ main = do
   log "Testing shuffle"
   let xs = [12, 32, 34, 43, 21, 22, 33, 45]
   logShow =<< randomSample' 10 (shuffle xs)
+
+  log "Testing chooseFloat"
   logShow =<< randomSample' 10 (chooseFloat 0.00 1.00)
 
   where
